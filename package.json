@@ -90,6 +90,18 @@
             "default": "$(pulse) ${percent}%",
             "markdownDescription": "You can use these variables to custom display format: `${percent}` or visit [doc](https://github.com/njzydark/vscode-stats-bar#display-format) to see detail (e.g. how use icon)"
           },
+          "statsBar.cpuLoad.threshold": {
+            "type": "number",
+            "scope": "machine-overridable",
+            "default": 70,
+            "description": "CPU usage threshold percentage that triggers warning color"
+          },
+          "statsBar.cpuLoad.warningColor": {
+            "type": "string",
+            "scope": "machine-overridable",
+            "default": "#ff0000",
+            "description": "Color to display when CPU usage exceeds threshold (e.g. #ff0000 for red)"
+          },
           "statsBar.loadavg.format": {
             "type": "string",
             "scope": "machine-overridable",

@@ -6,6 +6,13 @@ import { formatBytes, formatTimes, formatByDict, isDarwin } from './utils';
 
 type Await<T extends () => unknown> = T extends () => PromiseLike<infer U> ? U : ReturnType<T>;
 
+interface FormattedData {
+  module: StatsModule;
+  text: string;
+  tooltip: string;
+  color?: string;
+}
+
 class StatsBar {
   statusItems: StatusBarItem[] = [];
   timer: NodeJS.Timeout | null = null;
@@ -54,12 +61,17 @@ class StatsBar {
       const curStatusItem = this.statusItems[index];
       curStatusItem.text = data.text;
       curStatusItem.tooltip = data.tooltip || StatsModuleNameMap[data.module];
+      if (data.color) {
+        curStatusItem.color = data.color;
+      } else {
+        curStatusItem.color = undefined;
+      }
       curStatusItem.show();
     });
   }
 
-  private formatRes(module: StatsModule, rawRes: unknown) {
-    const formatedData = {
+  private formatRes(module: StatsModule, rawRes: unknown): FormattedData {
+    const formatedData: FormattedData = {
       module,
       text: '-',
       tooltip: ''
@@ -71,6 +83,15 @@ class StatsBar {
           percent: res.toFixed(0)
         };
         formatedData.text = formatByDict(setting.cfg?.get(ConfigurationKeys.CpuLoadFormat), dict);
+        
+        // Check if CPU usage exceeds threshold
+        const threshold = setting.cfg?.get(ConfigurationKeys.CpuLoadThreshold) as number || 70;
+        const warningColor = setting.cfg?.get(ConfigurationKeys.CpuLoadWarningColor) as string || '#ff0000';
+        
+        if (res > threshold) {
+          formatedData.text = `$(warning) ${formatedData.text}`;
+          formatedData.color = warningColor;
+        }
       }
     } else if (module === 'loadavg') {
       const res = rawRes as Await<SysinfoData['loadavg']>;

@@ -22,6 +22,8 @@ export enum ConfigurationKeys {
   Modules = 'modules',
   AllEnabled = 'enabled',
   CpuLoadFormat = 'cpuLoad.format',
+  CpuLoadThreshold = 'cpuLoad.threshold',
+  CpuLoadWarningColor = 'cpuLoad.warningColor',
   LoadavgFormat = 'loadavg.format',
   NetworkSpeedFormat = 'networkSpeed.format',
   MemoUsageFormat = 'memoUsage.format',
